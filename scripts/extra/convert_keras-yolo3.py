@@ -22,7 +22,8 @@ ap = argparse.ArgumentParser()
 
 ap.add_argument("-o", "--output_path",
                 required=False,
-                default='from_kerasyolo3/version_{}'.format(annotation_version),
+                default='from_kerasyolo3/version_{}'.format(
+                    annotation_version),
                 type=str,
                 help="The dataset root path location.")
 ap.add_argument("-r", "--gen_recursive",
@@ -33,13 +34,13 @@ ap.add_argument("-r", "--gen_recursive",
                 recursive folder tree or to direct txt files.")
 group = ap.add_mutually_exclusive_group(required=True)
 group.add_argument('--gt',
-    type=str,
-    default=None,
-    help="The annotation file that refers to ground-truth in (keras-yolo3 format)")
+                   type=str,
+                   default=None,
+                   help="The annotation file that refers to ground-truth in (keras-yolo3 format)")
 group.add_argument('--dr',
-    type=str,
-    default=None,
-    help="The annotation file that refers to detection-results in (keras-yolo3 format)")
+                   type=str,
+                   default=None,
+                   help="The annotation file that refers to detection-results in (keras-yolo3 format)")
 
 ARGS = ap.parse_args()
 
@@ -59,7 +60,8 @@ with open(annotation_file, 'r') as annot_f:
             # remove the root path to enable to path.join.
             if annotation_dir_name.startswith('/'):
                 annotation_dir_name = annotation_dir_name.replace('/', '', 1)
-            destination_dir = os.path.join(ARGS.output_path, annotation_dir_name)
+            destination_dir = os.path.join(
+                ARGS.output_path, annotation_dir_name)
             os.makedirs(destination_dir, exist_ok=True)
             # replace .jpg with your image format.
             file_name = os.path.basename(img_path).replace('.jpg', '.txt')
@@ -75,13 +77,15 @@ with open(annotation_file, 'r') as annot_f:
                     # Here we are dealing with ground-truth annotations
                     # <class_name> <left> <top> <right> <bottom> [<difficult>]
                     # todo: handle difficulty
-                    x_min, y_min, x_max, y_max, class_id = list(map(float, bbox.split(',')))
+                    x_min, y_min, x_max, y_max, class_id = list(
+                        map(float, bbox.split(',')))
                     out_box = '{} {} {} {} {}'.format(
                         class_map[int(class_id)].strip(), x_min, y_min, x_max, y_max)
                 else:
                     # Here we are dealing with detection-results annotations
                     # <class_name> <confidence> <left> <top> <right> <bottom>
-                    x_min, y_min, x_max, y_max, class_id, score = list(map(float, bbox.split(',')))
+                    x_min, y_min, x_max, y_max, class_id, score = list(
+                        map(float, bbox.split(',')))
                     out_box = '{} {} {} {} {} {}'.format(
                         class_map[int(class_id)].strip(), score,  x_min, y_min, x_max, y_max)
 

@@ -9,8 +9,8 @@ IN_FILE = 'result.txt'
 # change directory to the one with the files to be changed
 parent_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 parent_path = os.path.abspath(os.path.join(parent_path, os.pardir))
-DR_PATH = os.path.join(parent_path, 'input','detection-results')
-#print(DR_PATH)
+DR_PATH = os.path.join(parent_path, 'input', 'detection-results')
+# print(DR_PATH)
 os.chdir(DR_PATH)
 
 SEPARATOR_KEY = 'Enter Image Path:'
@@ -37,9 +37,11 @@ with open(IN_FILE) as infile:
             class_name, info = line.split(':', 1)
             confidence, bbox = info.split('%', 1)
             # get all the coordinates of the bounding box
-            bbox = bbox.replace(')','') # remove the character ')'
+            bbox = bbox.replace(')', '')  # remove the character ')'
             # go through each of the parts of the string and check if it is a digit
-            left, top, width, height = [int(s) for s in bbox.split() if s.lstrip('-').isdigit()]
+            left, top, width, height = [
+                int(s) for s in bbox.split() if s.lstrip('-').isdigit()]
             right = left + width
             bottom = top + height
-            outfile.write("{} {} {} {} {} {}\n".format(class_name, float(confidence)/100, left, top, right, bottom))
+            outfile.write("{} {} {} {} {} {}\n".format(
+                class_name, float(confidence)/100, left, top, right, bottom))

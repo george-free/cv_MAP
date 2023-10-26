@@ -1,4 +1,3 @@
-import numpy as np 
 import os
 
 def voc_ap(rec, prec):
@@ -123,7 +122,7 @@ def calculate_map(detected_results, gt_results, min_overlap=0.5):
         detected_data = detections_by_catogary[class_name]
         num_detections = len(detected_data)
 
-        print("class - {} detect {} objects.".format(class_name, num_detections))
+        # print("class - {} detect {} objects.".format(class_name, num_detections))
         # print(detected_data)
 
         # true positives and false positives
@@ -131,10 +130,7 @@ def calculate_map(detected_results, gt_results, min_overlap=0.5):
         fp = [0] * num_detections
 
         for idx, detection in enumerate(detected_data):
-            
-            # print("detection: {}".format(detection))
             image_id = detection[0]
-
             gt_data = gt_results[image_id]
 
             ovmax = -1
@@ -170,8 +166,8 @@ def calculate_map(detected_results, gt_results, min_overlap=0.5):
             else:
                 fp[idx] = 1
 
-        print("tp: {}".format(tp))
-        print("fp: {}".format(fp))
+        # print("tp: {}".format(tp))
+        # print("fp: {}".format(fp))
             
         # compute precision and recall
         cumsum = 0
@@ -195,13 +191,13 @@ def calculate_map(detected_results, gt_results, min_overlap=0.5):
         ap, mrec, mprec = voc_ap(rec[:], prec[:])
         sum_AP += ap
 
-        print(prec)
-        print()
-        print(rec)
+        # print(prec)
+        # print()
+        # print(rec)
 
     print("n_classes: {}".format(n_classes))
-    print(count_true_positives)
-    print(gt_counter_per_class)
+    # print(count_true_positives)
+    # print(gt_counter_per_class)
     mAP = sum_AP / n_classes
     print("mAP: {}".format(mAP))
 
@@ -209,9 +205,7 @@ def calculate_map(detected_results, gt_results, min_overlap=0.5):
 
 
 def read_data_files(files_list, det=True):
-
     result = {}
-
 
     for txt_file in files_list:
         
@@ -235,12 +229,29 @@ def read_data_files(files_list, det=True):
 
 
 if __name__ == "__main__":
-    
+    import argparse
+    argument_parser = argparse.ArgumentParser()
+    argument_parser.add_argument("-d", "--detect", type=str,
+                                 required=True,
+                                 help="dir to the detecte")
+    argument_parser.add_argument("-g", "--groundtruth", type=str,
+                                 required=True,
+                                 help="Path to the data file")
+
+    args = vars(argument_parser.parse_args())
     detected_result = {}
     gt_result = {}
 
-    det_path = "/home/turingvideo/lutao/project/cv_mAP/humans/v4_detects"
-    gt_path = "/home/turingvideo/lutao/project/cv_mAP/humans/groundtruth"
+    det_path = args["detect"]
+    gt_path = args["groundtruth"]
+
+    if not os.path.exists(det_path):
+        print("detected results {} are not found")
+        exit(-1)
+    
+    if not os.path.exists(gt_path):
+        print("groundtruth results {} are not found")
+        exit(-1)
 
     import glob
     ground_truth_files_list = glob.glob(gt_path + '/*.txt')
@@ -250,6 +261,6 @@ if __name__ == "__main__":
 
     detected_result = read_data_files(detected_files_list)
     gt_result = read_data_files(ground_truth_files_list, det=False)
-    print(detected_result)
+    # print(detected_result)
 
     mAP = calculate_map(detected_result, gt_result)      
