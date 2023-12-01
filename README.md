@@ -9,7 +9,10 @@ class_name score x1 y1 x2 y2
 ```
 ![Selection_172](https://github.com/george-free/cv_MAP/assets/29144898/d41c70de-0d0a-4b54-9a8c-aeec649bf8ff)
 
-The ground truth has the same format as the detected results.
+The ground truth has the format similiar detected results.
+
+![Selection_189](https://github.com/george-free/cv_MAP/assets/29144898/f913b00b-78b2-4656-b17c-47702aee4cb3)
+
 
 run the script below
 
